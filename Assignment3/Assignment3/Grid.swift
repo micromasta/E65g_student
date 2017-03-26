@@ -22,8 +22,12 @@ public func positionSequence (from: Position, to: Position) -> PositionSequence 
         .flatMap { $0 }
 }
 
-public enum CellState {
-    case alive, empty, born, died
+public enum CellState: String {
+    // case alive, empty, born, died     //This is the way I wanted to do it.
+    case alive = "alive"
+    case empty = "empty"
+    case born = "born"
+    case died = "died"
     
     public var isAlive: Bool {
         switch self {
@@ -31,7 +35,42 @@ public enum CellState {
         default: return false
         }
     }
+    /**
+     1. Using the CellState enum provided in the template (Grid.swift) make the following additions
+     •	Give the enum a raw type of String
+     •	Assign the name of the case as the String value for each case
+     •	equip the enum with a description method which uses a switch statement to hand back the raw value
+     •	equip the enum with an allValues method which returns an array of all available values for the enum
+     •	equip the enum with a method toggle(value:CellState)-> CellState which when passed .empty or .died, returns .alive, when passed .alive or .born returns .empty
+     */
+    public func description() -> String {
+        switch self {
+        case .alive:
+            return CellState.alive.rawValue
+        case .empty:
+            return CellState.empty.rawValue
+        case .born:
+            return CellState.born.rawValue
+        case .died:
+            return CellState.died.rawValue
+        }
+    }
+    
+    public static func allValues() -> [CellState] {
+         return [.alive, .empty, .born, .died]
+    }
+    
+    public static func toggle(value: CellState) -> CellState {
+        switch value {
+        case .alive, .born:
+            return .empty
+        case .empty, .died:
+            return .alive
+        }
+    }
+    
 }
+
 
 public struct Cell {
     var position = Position(row:0, col:0)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="49e-Tb-3d3">
-    <device id="retina4_0" orientation="portrait">
+    <device id="retina3_5" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -20,14 +20,14 @@
                         <viewControllerLayoutGuide type="bottom" id="4ug-Mw-9AY"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="tsR-hK-woN" userLabel="FrameView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HlP-vc-iqv" userLabel="WorkingView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="499"/>
+                                <rect key="frame" x="0.0" y="20" width="480" height="251"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gJa-sT-bEf" userLabel="LifeGrid">
-                                        <rect key="frame" x="31.5" y="121.5" width="256.5" height="256.5"/>
+                                        <rect key="frame" x="139.5" y="25.5" width="201" height="201"/>
                                         <color key="backgroundColor" red="0.0078431372549019607" green="0.90196078431372551" blue="1" alpha="0.19871040239726026" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="gJa-sT-bEf" secondAttribute="height" multiplier="1:1" id="ft8-X3-9lS"/>
@@ -68,14 +68,14 @@
                         <viewControllerLayoutGuide type="bottom" id="Djb-ko-YwX"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="QS5-Rx-YEW" userLabel="FrameView">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t57-fD-LNV" userLabel="WorkingView">
-                                <rect key="frame" x="0.0" y="20" width="320" height="499"/>
+                                <rect key="frame" x="0.0" y="20" width="480" height="251"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hwN-8P-C1m" userLabel="BlueView">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="249.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="251"/>
                                         <subviews>
                                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Generation" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Khl-UN-PxB" userLabel="Generation">
                                                 <rect key="frame" x="15" y="15" width="93" height="30"/>
@@ -120,7 +120,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gPw-eX-Qeg" userLabel="GreenView">
-                                        <rect key="frame" x="0.0" y="249.5" width="320" height="249.5"/>
+                                        <rect key="frame" x="240" y="0.0" width="240" height="251"/>
                                         <color key="backgroundColor" red="0.3617892795138889" green="1" blue="0.296142578125" alpha="0.20456977739726026" colorSpace="calibratedRGB"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
