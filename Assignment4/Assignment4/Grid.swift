@@ -1,6 +1,8 @@
 //
 //  Grid.swift
 //
+import Foundation //Needed for Timer
+
 public typealias GridPosition = (row: Int, col: Int)
 public typealias GridSize = (rows: Int, cols: Int)
 
@@ -13,6 +15,32 @@ public enum CellState {
         switch self {
         case .alive, .born: return true
         default: return false
+        }
+    }
+    
+    public func description() -> CellState {
+        switch self {
+        case .alive:
+            return CellState.alive
+        case .empty:
+            return CellState.empty
+        case .born:
+            return CellState.born
+        case .died:
+            return CellState.died
+        }
+    }
+    
+    public static func allValues() -> [CellState] {
+        return [.alive, .empty, .born, .died]
+    }
+    
+    public static func toggle(value: CellState) -> CellState {
+        switch value {
+        case .alive, .born:
+            return .empty
+        case .empty, .died:
+            return .alive
         }
     }
 }
@@ -140,4 +168,25 @@ public extension Grid {
         default: return .empty
         }
     }
+}
+
+public protocol EngineDelegate {
+    func engineDidUpdate(withGrid: GridProtocol)
+}
+
+public protocol EngineProtocol {
+    var delegate: EngineDelegate? {get set}
+    var grid: GridProtocol {get set}
+    var refreshRate: Double {get set}  //Not sure how to set default value to zero here.
+    var refreshTimer: Timer? {get set}
+    var rows: Int {get set}
+    var cols: Int {get set}
+    init(_ rows: Int, _ cols: Int)
+    func step() -> GridProtocol
+    
+}
+
+class StandardEngine : EngineProtocol {
+    
+    var refreshRate: TimeInterval = 0.0
 }
