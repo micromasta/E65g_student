@@ -19,29 +19,7 @@ public enum CellState {
     }
     
     public func description() -> CellState {
-        switch self {
-        case .alive:
-            return CellState.alive
-        case .empty:
-            return CellState.empty
-        case .born:
-            return CellState.born
-        case .died:
-            return CellState.died
-        }
-    }
-    
-    public static func allValues() -> [CellState] {
-        return [.alive, .empty, .born, .died]
-    }
-    
-    public static func toggle(value: CellState) -> CellState {
-        switch value {
-        case .alive, .born:
-            return .empty
-        case .empty, .died:
-            return .alive
-        }
+        return self
     }
 }
 
@@ -170,6 +148,10 @@ public extension Grid {
     }
 }
 
+public protocol GridViewDataSource {
+    subscript (row: Int, col: Int) -> CellState { get set }
+}
+
 public protocol EngineDelegate {
     func engineDidUpdate(withGrid: GridProtocol)
 }
@@ -177,7 +159,7 @@ public protocol EngineDelegate {
 public protocol EngineProtocol {
     var delegate: EngineDelegate? {get set}
     var grid: GridProtocol {get set}
-    var refreshRate: Double {get set}  //Not sure how to set default value to zero here.
+    var refreshRate: Double {get set}
     var refreshTimer: Timer? {get set}
     var rows: Int {get set}
     var cols: Int {get set}
@@ -186,7 +168,107 @@ public protocol EngineProtocol {
     
 }
 
+
 class StandardEngine : EngineProtocol {
     
-    var refreshRate: TimeInterval = 0.0
+    static let engine: StandardEngine = StandardEngine(10, 10)
+    
+    var delegate: EngineDelegate?
+    var grid: GridProtocol
+    var rows: Int
+    var cols: Int
+    
+    var refreshTimer: Timer?
+    var refreshRate: TimeInterval = 0.0 {
+        didSet {
+            if refreshRate > 0.0 {
+                refreshTimer = Timer.scheduledTimer(
+                    withTimeInterval: refreshRate,
+                    repeats: true
+                ) { (t: Timer) in
+                    _ = self.step()
+                }
+            }
+            else {
+                refreshTimer?.invalidate()
+                refreshTimer = nil
+            }
+        }
+    }
+    
+    internal required init(_ rows: Int,_ cols: Int) {
+        self.grid = Grid(rows, cols, cellInitializer: {_,_ in .empty})
+        self.rows = rows
+        self.cols = cols
+        delegate?.engineDidUpdate(withGrid: grid)
+    }
+    
+    func step() -> GridProtocol {
+        let newGrid = grid.next()
+        grid = newGrid
+        //         updateClosure?(self.grid)
+        delegate?.engineDidUpdate(withGrid: grid)
+        
+        // Notification to all noting Engine has been updated.
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineUpdate")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["engine" : self])
+        nc.post(n)
+        
+        return grid
+    }
+    
+    // subscript for engine; gets and sets current engine grid.
+    public subscript (row: Int, col: Int) -> CellState {
+        get { return self.grid[row,col] }
+        set { self.grid[row,col] = newValue }
+    }
+    
+    // handles requests to update Engine's grid size.
+    public func changeGridSize(_ rows: Int,_ cols: Int) -> Void {
+        self.grid = Grid(rows, cols, cellInitializer: {_,_ in .empty})
+        self.rows = rows
+        self.cols = cols
+        delegate?.engineDidUpdate(withGrid: grid)
+        
+        // Notification to all noting Engine has been updated.
+        let nc = NotificationCenter.default
+        let name = Notification.Name(rawValue: "EngineUpdate")
+        let n = Notification(name: name,
+                             object: nil,
+                             userInfo: ["engine" : self])
+        nc.post(n)
+    }
+    
+    var aliveCellCount: Int = 0
+    var bornCellCount: Int = 0
+    var deadCellCount: Int = 0
+    var emptyCellCount: Int = 0
+    
+    public func updateCellStatusCounts() -> Void {
+        aliveCellCount = 0
+        bornCellCount = 0
+        deadCellCount = 0
+        emptyCellCount = 0
+        
+        for row in 0..<self.rows {
+            for col in 0..<self.cols {
+                switch StandardEngine.engine[row,col].description() {
+                case .alive:
+                    aliveCellCount += 1
+                case .born:
+                    bornCellCount += 1
+                case .died:
+                    deadCellCount += 1
+                case .empty:
+                    emptyCellCount += 1
+                }
+            }
+        }
+    }
+    
 }
+
+
