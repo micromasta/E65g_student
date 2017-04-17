@@ -99,7 +99,7 @@ import UIKit
         path.stroke()
     }
     
-    // Touch Handling
+    // MARK: Touch Handling
     var lastTouchedPosition: Position?
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         lastTouchedPosition = process(touches: touches)

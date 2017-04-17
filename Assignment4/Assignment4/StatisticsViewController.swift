@@ -31,6 +31,8 @@ class StatisticsViewController: UIViewController {
             queue: nil) { (n) in
                 self.updateCellCounts()
         }
+        
+        updateCellCounts()
     }
 
     func updateCellCounts() {
