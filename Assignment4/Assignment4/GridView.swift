@@ -7,15 +7,10 @@
 //
 
 import UIKit
-
+// NOT A CONTROLLER
 @IBDesignable class GridView: UIView {
     
-    @IBInspectable var size: Int = 20 {
-        didSet {
-            //var grid = [[Bool]] (repeating: [Bool](repeating: false, count:gridSize), count:gridSize)
-            self.myGrid = Grid(size, size)
-        }
-    }
+    @IBInspectable var size: Int = 10
     @IBInspectable var livingColor: UIColor = .green
     @IBInspectable var emptyColor: UIColor = .white
     @IBInspectable var bornColor: UIColor = .blue
@@ -23,7 +18,7 @@ import UIKit
     @IBInspectable var gridColor: UIColor = .black
     @IBInspectable var gridWidth: CGFloat = 2.0
     
-    var myGrid = Grid(0,0)
+    var myGrid: GridViewDataSource?
     
     override func draw(_ rect: CGRect) {
         let gridSize = CGFloat(self.size)  // gridSize is the CGFloat version of Int 'size'.
@@ -54,6 +49,7 @@ import UIKit
                 }
                 */
                 let path = UIBezierPath(ovalIn: subRect)  // Creates path based on subRect
+                if let myGrid = myGrid {
                 switch myGrid[(i,j)].description() {  // Sets fill color of circle for this subRect based on cell status.
                 case .alive:
                     livingColor.setFill()
@@ -63,6 +59,7 @@ import UIKit
                     bornColor.setFill()
                 case .died:
                     diedColor.setFill()
+                }
                 }
                 path.fill() // Fills cell with circle of appropriate color.
             }
@@ -118,14 +115,25 @@ import UIKit
     
     typealias Position = (row: Int, col: Int)
     func process(touches: Set<UITouch>) -> Position? {
+        let touchY = touches.first!.location(in: self.superview).y
+        let touchX = touches.first!.location(in: self.superview).x
+        guard touchX > frame.origin.x && touchX < (frame.origin.x + frame.size.width) else { return nil }
+        guard touchY > frame.origin.y && touchY < (frame.origin.y + frame.size.height) else { return nil }
+        
         guard touches.count == 1 else { return nil }
-        let position = convert(touch: touches.first!)
-        guard lastTouchedPosition?.row != position.row || lastTouchedPosition?.col != position.col
-            else { return position }
-        //myGrid[position] = myGrid[position].isAlive ? .empty : .alive
-        myGrid[position.row, position.col] = CellState.toggle(value: myGrid[position.row, position.col])
-        setNeedsDisplay()
-        return position
+        let pos = convert(touch: touches.first!)
+        
+        //************* IMPORTANT ****************
+        guard lastTouchedPosition?.row != pos.row
+            || lastTouchedPosition?.col != pos.col
+            else { return pos }
+        //****************************************
+        
+        if myGrid != nil {
+            myGrid![pos.row, pos.col] = myGrid![pos.row, pos.col].isAlive ? .empty : .alive
+            setNeedsDisplay()
+        }
+        return pos
     }
     
     func convert(touch: UITouch) -> Position {

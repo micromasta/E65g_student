@@ -64,11 +64,11 @@
 			children = (
 				FB475A371E8828EF00D2EAD3 /* Grid.swift */,
 				9DF5823F1EA04934003E5B87 /* GridView.swift */,
-				FBAD2E061E2BE38C008207C0 /* AppDelegate.swift */,
 				FBAD2E081E2BE38C008207C0 /* InstrumentationViewController.swift */,
 				FBAD2E0A1E2BE38C008207C0 /* SimulationViewController.swift */,
 				9DF5823D1EA01E87003E5B87 /* StatisticsViewController.swift */,
 				FBAD2E0C1E2BE38C008207C0 /* Main.storyboard */,
+				FBAD2E061E2BE38C008207C0 /* AppDelegate.swift */,
 				FBAD2E0F1E2BE38C008207C0 /* Assets.xcassets */,
 				FBAD2E111E2BE38C008207C0 /* LaunchScreen.storyboard */,
 				FBAD2E141E2BE38C008207C0 /* Info.plist */,
@@ -278,7 +278,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Assignment4/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.harvard.Assignment4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -292,7 +292,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Assignment4/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.harvard.Assignment4;
 				PRODUCT_NAME = "$(TARGET_NAME)";
