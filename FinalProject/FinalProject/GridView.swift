@@ -7,7 +7,7 @@
 //
 
 import UIKit
-// NOT A CONTROLLER
+
 @IBDesignable class GridView: UIView {
     
     @IBInspectable var size: Int = 10
@@ -16,7 +16,7 @@ import UIKit
     @IBInspectable var bornColor: UIColor = .blue
     @IBInspectable var diedColor: UIColor = .red
     @IBInspectable var gridColor: UIColor = .black
-    @IBInspectable var gridWidth: CGFloat = 2.0
+    @IBInspectable var gridWidth: CGFloat = 1.0
     
     var myGrid: GridViewDataSource?
     

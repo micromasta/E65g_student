@@ -172,6 +172,7 @@ public protocol EngineProtocol {
 class StandardEngine : EngineProtocol {
     
     static let engine: StandardEngine = StandardEngine(10, 10)
+    static let editor: StandardEngine = StandardEngine(10, 10)
     
     var delegate: EngineDelegate?
     var grid: GridProtocol
@@ -220,9 +221,11 @@ class StandardEngine : EngineProtocol {
         return grid
     }
     
-    func setGrid(newGrid: GridProtocol) -> Void {
+    func setGrid(to newGrid: GridProtocol) -> Void {
         let newGrid = newGrid
         grid = newGrid
+        self.rows = newGrid.size.rows
+        self.cols = newGrid.size.cols
         
         // Delegate update
         delegate?.engineDidUpdate(withGrid: grid)
@@ -234,7 +237,6 @@ class StandardEngine : EngineProtocol {
                              object: nil,
                              userInfo: ["engine" : self])
         nc.post(n)
-        
     }
     
     // subscript for engine; gets and sets current engine grid.
@@ -286,85 +288,96 @@ class StandardEngine : EngineProtocol {
         }
     }
     
+    var currentGridName: String = "Default"
+    
+    public func saveCurrentGridToUserDefaults(gridName: String) {
+        let title = gridName
+        
+        var alive: [[Int]] = []
+        var born: [[Int]] = []
+        var died: [[Int]] = []
+        
+        for row in 0..<self.rows {
+            for col in 0..<self.cols {
+                switch StandardEngine.engine[row,col].description() {
+                case .alive:
+                    alive.append([row,col])
+                case .born:
+                    born.append([row,col])
+                case .died:
+                    died.append([row,col])
+                default: ()
+                }
+            } // end of inner for loop
+        } // end of outer for loop
+        
+        var cells: [String: [[Int]]] = [:]
+        cells["alive"] = alive
+        cells["born"] = born
+        cells["died"] = died
+        
+        // Saves grid cells, grid title, and grid size out to user defaults.
+        let defaults = UserDefaults.standard
+        defaults.set(cells, forKey:"cells")
+        defaults.set(title, forKey:"title")
+        defaults.set(self.rows, forKey:"size")
+    } // end of saveCurrentGridToUserDefaults()
+    
+    public func restoreUserDefaultToGrid(title: String, size: Int, cells: [String: [[Int]]]) {
+        var newGrid = Grid(size, size, cellInitializer: {_,_ in .empty})
+        self.currentGridName = title
+        
+        let alive: [[Int]] = cells["alive"]!
+        let born: [[Int]] = cells["born"]!
+        let died: [[Int]] = cells["died"]!
+        
+        
+        for cell in alive {
+            let row = cell[0]
+            let col = cell[1]
+            newGrid[row,col] = CellState.alive
+        }
+        
+        for cell in born {
+            let row = cell[0]
+            let col = cell[1]
+            newGrid[row,col] = CellState.born
+        }
+        
+        for cell in died {
+            let row = cell[0]
+            let col = cell[1]
+            newGrid[row,col] = CellState.died
+        }
+        
+        StandardEngine.engine.setGrid(to: newGrid)
+        
+        if currentGridName != "Default" {
+            GridContainer.myGridContainer.gridTitles.insert(title, at: 0)
+            GridContainer.myGridContainer.gridConfigurations.insert(newGrid, at: 0)
+            // ask Instrumentation controller to reload Table View
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+        }
+    } // end of restoreUserDefaultToGrid()
 }
 
 
-class GridConfig {
-    var finalProjectURL = "https://dl.dropboxusercontent.com/u/7544475/S65g.json"
-    var gridTitles: [String] = []
+class GridContainer {
+    var gridTitles: [String]
     var gridConfigurations: [GridProtocol] = []
-    
+    static let myGridContainer: GridContainer = GridContainer()
     
     init() {
         gridTitles = []
         gridConfigurations = []
-        
-        let fetcher = Fetcher()
-        fetcher.fetchJSON(url: URL(string:finalProjectURL)!) { (json: Any?, message: String?) in
-            guard message == nil else {
-                print(message ?? "nil")
-                return
-            }
-            guard let json = json else {
-                print("no json")
-                return
-            }
-            print(json)
-            
-            /*
-            let jsonArray = json as! NSArray
-            for item in 0..<jsonArray.count {  // for every json item...
-                let jsonDictionary = jsonArray[item] as! NSDictionary
-                
-                let jsonTitle = jsonDictionary["title"] as! String
-                let jsonContents = jsonDictionary["contents"] as! [[Int]]
-                
-                // find max value so we know how big to make the grid.
-                var maxRowColValue: Int = 10 // minimum Grid Size will be set to 10.
-                for i in 0..<jsonContents.count {
-                    if (jsonContents[i].max()! > maxRowColValue){maxRowColValue = jsonContents[i].max()!}
-                }
-                
-                // define size of grid we're about to create based on maxRowColValue
-                var myGridSize: Int
-                if maxRowColValue >= 75 && maxRowColValue <= 150 {  // if large grid, make it about the same size as the largest rowcol value.
-                    //myGridSize = Int(ceil(Double(maxRowColValue/10))) * 10
-                    myGridSize = Int(Double(maxRowColValue/10).rounded(.up)) * 10
-                } else { // else create new grid roughly the size of maxRowColValue times two.
-                    // create new grid roughly the size of maxRowColValue times two.
-                    myGridSize = (Int(maxRowColValue/10) * 10) * 2
-                }
-                
-                
-                //let myGridSize: Int = (Int(maxRowColValue/10) * 10) * 2
-                var myGrid: GridProtocol
-                if myGridSize <= 150 {
-                    myGrid = Grid(myGridSize, myGridSize, cellInitializer: {_,_ in .empty})
-                    
-                    // set grid cells to alive where appropriate.
-                    for i in 0..<jsonContents.count {
-                        let row: Int = jsonContents[i][0]
-                        let col: Int = jsonContents[i][1]
-                        myGrid[(row,col)] = CellState.alive
-                    }
-                    
-                    // add grid to gridConfigurations Array.
-                    self.gridConfigurations.append(myGrid)
-                    // add grid configuration title to gridTitles[] array.
-                    self.gridTitles.append(jsonTitle)
-                }
-                
-            }
-            
-            //print (jsonTitle, jsonContents)
-            OperationQueue.main.addOperation {
-                //self.textView.text = resultString
-                var myGrid = Grid(100, 100, cellInitializer: {_,_ in .empty})
-                myGrid[1,1] = CellState.alive
-            }
-            */
-        } // End of fetcher
     }
     
+    func setGridTitles(to gridTitles: [String]){
+        self.gridTitles = gridTitles
+    }
+    
+    func setGridConfigurations(to gridConfigurations: [GridProtocol]){
+        self.gridConfigurations = gridConfigurations
+    }
 }
 

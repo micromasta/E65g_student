@@ -16,7 +16,42 @@ class SimulationViewController: UIViewController, EngineDelegate, GridViewDataSo
         _ = engine.step() // steps the engine, which will update its grid to its next state, and trigger delegate.
     }
     
+    @IBAction func save(_ sender: Any) {
+        
+        let alertController = UIAlertController(title:"Enter new name:", message: nil, preferredStyle: .alert)
+        
+        alertController.addTextField { textField in
+            textField.placeholder = "Grid name"
+        }
+        
+        // closure completion handler executed after user hits OK
+        let okActionHandler = { (action:UIAlertAction!) -> Void in
+            let usersGridName = alertController.textFields?[0].text
+            
+            // save current grid state to user defaults
+            self.engine.saveCurrentGridToUserDefaults(gridName: usersGridName!)
+            
+            self.engine.currentGridName = usersGridName!
+            
+            self.gridContainer.gridTitles.insert(usersGridName!, at: 0)
+            self.gridContainer.gridConfigurations.insert(self.engine.grid, at: 0)
+            
+            // ask Instrumentation controller to reload Table View
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "reload"), object: nil)
+        }
+        
+        let ok = UIAlertAction(title:"OK", style: UIAlertActionStyle.default, handler:okActionHandler)
+        alertController.addAction(ok)
+        
+        self.present(alertController, animated:true, completion:nil)
+    }
+    
+    @IBAction func reset(_ sender: Any) {
+        engine.changeGridSize(10, 10)
+    }
+    
     let engine = StandardEngine.engine
+    let gridContainer = GridContainer.myGridContainer
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,16 +59,6 @@ class SimulationViewController: UIViewController, EngineDelegate, GridViewDataSo
         engine.delegate = self
         gridView.myGrid = self // Important - sets grid in GridView.
         gridView.size = engine.rows // Sets size variable in GridView.
-        
-        let nc = NotificationCenter.default
-        let name = Notification.Name(rawValue: "EngineUpdate")
-        nc.addObserver(
-            forName: name,
-            object: nil,
-            queue: nil) { (n) in
-                self.gridView.setNeedsDisplay()
-        }
-        
     }
     
     // engineDidUpdate declaration to implement EngineDelegate

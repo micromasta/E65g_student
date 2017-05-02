@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9D0643251EB69FD100D0674C /* GridEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D0643241EB69FD100D0674C /* GridEditorViewController.swift */; };
 		9D15C5381EAC4FD3001D8DA8 /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D15C5331EAC4FD3001D8DA8 /* Grid.swift */; };
 		9D15C5391EAC4FD3001D8DA8 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D15C5341EAC4FD3001D8DA8 /* GridView.swift */; };
 		9D15C53A1EAC4FD3001D8DA8 /* StatisticsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D15C5351EAC4FD3001D8DA8 /* StatisticsViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9D0643241EB69FD100D0674C /* GridEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridEditorViewController.swift; sourceTree = "<group>"; };
 		9D15C5331EAC4FD3001D8DA8 /* Grid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		9D15C5341EAC4FD3001D8DA8 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		9D15C5351EAC4FD3001D8DA8 /* StatisticsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsViewController.swift; sourceTree = "<group>"; };
@@ -68,6 +70,7 @@
 				9D54D6131EB4CC3600658DE8 /* Fetcher.swift */,
 				9D15C5341EAC4FD3001D8DA8 /* GridView.swift */,
 				9D15C5361EAC4FD3001D8DA8 /* InstrumentationViewController.swift */,
+				9D0643241EB69FD100D0674C /* GridEditorViewController.swift */,
 				9D15C5371EAC4FD3001D8DA8 /* SimulationViewController.swift */,
 				9D15C5351EAC4FD3001D8DA8 /* StatisticsViewController.swift */,
 				FBAD2E2C1E2BE417008207C0 /* Main.storyboard */,
@@ -156,6 +159,7 @@
 				9D15C53A1EAC4FD3001D8DA8 /* StatisticsViewController.swift in Sources */,
 				9D15C53B1EAC4FD3001D8DA8 /* InstrumentationViewController.swift in Sources */,
 				9D15C53C1EAC4FD3001D8DA8 /* SimulationViewController.swift in Sources */,
+				9D0643251EB69FD100D0674C /* GridEditorViewController.swift in Sources */,
 				9D15C5391EAC4FD3001D8DA8 /* GridView.swift in Sources */,
 				9D15C5381EAC4FD3001D8DA8 /* Grid.swift in Sources */,
 			);

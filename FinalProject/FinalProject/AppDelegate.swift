@@ -12,10 +12,16 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        let defaults = UserDefaults.standard
+        
+        // Restores last saved Simulation grid from User Defaults.
+        if let cells = defaults.object(forKey: "cells"), let title = defaults.object(forKey: "title"), let size = defaults.object(forKey: "size") {
+            StandardEngine.engine.restoreUserDefaultToGrid(title: title as! String, size: size as! Int, cells: cells as! [String : [[Int]]])
+        }
+        
         return true
     }
 
